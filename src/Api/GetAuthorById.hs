@@ -8,8 +8,8 @@ module Api.GetAuthorById
 where
 
 import Control.Monad.IO.Class (liftIO)
-import Database.Persist.Sql (ConnectionPool, Entity (..), getEntity, runSqlPool, toSqlKey)
-import Dto.AuthorDto (AuthorDto, toDto)
+import Database.Persist.Sql (ConnectionPool, getEntity, runSqlPool, toSqlKey)
+import Dto.AuthorDto (AuthorDto, fromAuthor)
 import Persistence.Models (AuthorId)
 import Servant
 
@@ -26,4 +26,4 @@ getAuthorByIdHandler pool authorId = do
 
   case maybeAuthor of
     Nothing -> throwError err404
-    Just (Entity key author) -> return $ toDto key author
+    Just author -> return $ fromAuthor author

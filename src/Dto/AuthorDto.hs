@@ -2,17 +2,26 @@
 
 module Dto.AuthorDto
   ( AuthorDto (..),
-    toDto,
+    AuthorDtoWrapper (..),
+    fromAuthorWithKey,
+    fromAuthorWithEntityKey,
+    fromAuthor,
   )
 where
 
 import Data.Aeson
 import Data.Text (Text)
 import Data.Time (UTCTime)
-import Database.Persist.Sql (fromSqlKey)
+import Database.Persist.Sql (Entity (..), fromSqlKey)
 import GHC.Generics (Generic)
 import qualified Persistence.Models as Db
 import Prelude hiding (id)
+
+newtype AuthorDtoWrapper = AuthorDtoWrapper
+  {authors :: [AuthorDto]}
+  deriving (Generic, Show)
+
+instance ToJSON AuthorDtoWrapper
 
 data AuthorDto = AuthorDto
   { id :: Int,
@@ -25,12 +34,18 @@ data AuthorDto = AuthorDto
 
 instance ToJSON AuthorDto
 
-toDto :: Db.AuthorId -> Db.Author -> AuthorDto
-toDto key author = do
+fromAuthorWithKey :: Int -> Db.Author -> AuthorDto
+fromAuthorWithKey key author =
   AuthorDto
-    { id = fromIntegral $ fromSqlKey key,
+    { id = key,
       firstName = Db.authorFirstName author,
       lastName = Db.authorLastName author,
       createdAt = Db.authorCreatedAt author,
       updatedAt = Db.authorUpdatedAt author
     }
+
+fromAuthorWithEntityKey :: Db.AuthorId -> Db.Author -> AuthorDto
+fromAuthorWithEntityKey key = fromAuthorWithKey (fromIntegral $ fromSqlKey key)
+
+fromAuthor :: Entity Db.Author -> AuthorDto
+fromAuthor (Entity key author) = fromAuthorWithEntityKey key author

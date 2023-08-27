@@ -7,6 +7,7 @@ module LibraryApi
 where
 
 import Api.GetAuthorById
+import Api.GetAllAuthors
 import Api.Hello
 import Api.Bye
 import Network.Wai.Handler.Warp (run)
@@ -17,12 +18,14 @@ type LibApi =
   Hello
     :<|> Bye
     :<|> GetAuthorById
+    :<|> GetAllAuthors
 
 serverWithPool :: ConnectionPool -> Server LibApi
 serverWithPool pool =
   helloHandler
     :<|> byeHandler
     :<|> getAuthorByIdHandler pool
+    :<|> getAllAuthorsHandler pool
 
 libApi :: Proxy LibApi
 libApi = Proxy
