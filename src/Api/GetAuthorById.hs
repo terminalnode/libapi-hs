@@ -20,9 +20,8 @@ type GetAuthorById =
 
 getAuthorByIdHandler :: ConnectionPool -> Int -> Handler AuthorDto
 getAuthorByIdHandler pool authorId = do
-  maybeAuthor <- liftIO $
-    flip runSqlPool pool $ do
-      getEntity (toSqlKey $ fromIntegral authorId :: AuthorId)
+  let key = toSqlKey $ fromIntegral authorId :: AuthorId
+  maybeAuthor <- liftIO $ flip runSqlPool pool $ getEntity key
 
   case maybeAuthor of
     Nothing -> throwError err404

@@ -22,6 +22,5 @@ type GetAllAuthors =
 getAllAuthorsHandler :: ConnectionPool -> Handler AuthorDtoWrapper
 getAllAuthorsHandler pool = do
   dbAuthors :: [Entity Author] <-
-    liftIO $
-      flip runSqlPool pool $ selectList [] []
+    liftIO $ flip runSqlPool pool $ selectList [] []
   return $ AuthorDtoWrapper {authors = map fromAuthor dbAuthors}
