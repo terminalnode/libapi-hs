@@ -15,6 +15,6 @@ connStr = "host=localhost dbname=libapihs user=libapihs_user password=libapihs_p
 
 main :: IO ()
 main = runStderrLoggingT $ do
-  withPostgresqlPool connStr 10 $ \pool ->
+  withPostgresqlPool connStr 10 $ \pool -> do
     runSqlPool (runMigration migrateAll) pool
-  liftIO runLibApi
+    liftIO (runLibApi pool)
