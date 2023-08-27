@@ -8,25 +8,22 @@ module Api.GetAuthorById
 where
 
 import Control.Monad.IO.Class (liftIO)
-import qualified Data.Text as T
-import Data.Time (getCurrentTime)
-import Database.Persist.Sql (ConnectionPool)
-import qualified Dto.Author as Dto
+import Database.Persist.Sql (ConnectionPool, Entity (..), getEntity, runSqlPool, toSqlKey)
+import Dto.AuthorDto (AuthorDto, toDto)
+import Persistence.Models (AuthorId)
 import Servant
 
 type GetAuthorById =
   "author"
     :> Capture "authorId" Int
-    :> Get '[JSON] Dto.Author
+    :> Get '[JSON] AuthorDto
 
-getAuthorByIdHandler :: ConnectionPool -> Int -> Handler Dto.Author
+getAuthorByIdHandler :: ConnectionPool -> Int -> Handler AuthorDto
 getAuthorByIdHandler pool authorId = do
-  currentTime <- liftIO getCurrentTime
-  return
-    Dto.Author
-      { Dto.id = authorId,
-        Dto.firstName = T.pack "John",
-        Dto.lastName = T.pack "Doe",
-        Dto.createdAt = currentTime,
-        Dto.updatedAt = currentTime
-      }
+  maybeAuthor <- liftIO $
+    flip runSqlPool pool $ do
+      getEntity (toSqlKey $ fromIntegral authorId :: AuthorId)
+
+  case maybeAuthor of
+    Nothing -> throwError err404
+    Just (Entity key author) -> return $ toDto key author

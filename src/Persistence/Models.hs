@@ -15,11 +15,11 @@
 module Persistence.Models
   ( migrateAll,
     UserId,
-    User,
+    User(..),
     BookId,
-    Book,
+    Book(..),
     AuthorId,
-    Author,
+    Author(..),
   )
 where
 

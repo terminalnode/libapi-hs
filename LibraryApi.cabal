@@ -28,7 +28,7 @@ library
       Api.Bye
       Api.GetAuthorById
       Api.Hello
-      Dto.Author
+      Dto.AuthorDto
       LibraryApi
       Persistence.Models
   other-modules:
