@@ -17,7 +17,12 @@ dependencies:
 - servant
 - servant-server
 - warp
-- postgresql-simple
+- persistent
+- persistent-postgresql
+- persistent-template
+- time
+- text
+- monad-logger
 
 ghc-options:
 - -Wall

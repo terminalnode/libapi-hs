@@ -28,6 +28,7 @@ library
       Api.Bye
       Api.Hello
       LibraryApi
+      Persistence.Models
   other-modules:
       Paths_LibraryApi
   hs-source-dirs:
@@ -35,9 +36,14 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
-    , postgresql-simple
+    , monad-logger
+    , persistent
+    , persistent-postgresql
+    , persistent-template
     , servant
     , servant-server
+    , text
+    , time
     , warp
   default-language: Haskell2010
 
@@ -51,9 +57,14 @@ executable LibraryApi-exe
   build-depends:
       LibraryApi
     , base >=4.7 && <5
-    , postgresql-simple
+    , monad-logger
+    , persistent
+    , persistent-postgresql
+    , persistent-template
     , servant
     , servant-server
+    , text
+    , time
     , warp
   default-language: Haskell2010
 
@@ -68,8 +79,13 @@ test-suite LibraryApi-test
   build-depends:
       LibraryApi
     , base >=4.7 && <5
-    , postgresql-simple
+    , monad-logger
+    , persistent
+    , persistent-postgresql
+    , persistent-template
     , servant
     , servant-server
+    , text
+    , time
     , warp
   default-language: Haskell2010
